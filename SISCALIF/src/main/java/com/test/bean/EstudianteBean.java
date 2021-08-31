@@ -178,6 +178,75 @@ public class EstudianteBean {
         }
     }
     
+    //Lista de estudiantes por curso
+    public String listarEstudianteCurso(String codCurso){
+        StringBuilder salidaTabla=new StringBuilder();
+        StringBuilder query=new StringBuilder();
+        query.append(" select e.idestudiante,e.cod_est,e.nombre,e.apellido,e.ci,c.nombre_curso from cursos c ");
+        query.append(" INNER JOIN estudiante e ON c.idcurso=e.idcurso where e.idcurso=? ");
+        try {
+            PreparedStatement pst=connection.prepareStatement(query.toString());
+            pst.setInt(1, Integer.parseInt(codCurso));
+            ResultSet resultado=pst.executeQuery();
+            while(resultado.next()){
+                salidaTabla.append("<tr>");
+                salidaTabla.append("<td>");
+                salidaTabla.append(resultado.getString(2));
+                salidaTabla.append("</td>");
+                salidaTabla.append("<td>");
+                salidaTabla.append(resultado.getString(3));
+                salidaTabla.append("</td>");
+                salidaTabla.append("<td>");
+                salidaTabla.append(resultado.getString(4));
+                salidaTabla.append("</td>");
+                salidaTabla.append("<td>");
+                salidaTabla.append(resultado.getInt(5));
+                salidaTabla.append("</td>");
+                salidaTabla.append("<td>");
+                salidaTabla.append(resultado.getString(6));
+                salidaTabla.append("</td>");
+                //adicionando enlace para modificar ese registro
+                salidaTabla.append("<td>");
+                salidaTabla.append("<a href=modificarEstudiante.jsp?cod=").append(resultado.getInt(1)).append(">Modificar</a>");
+                salidaTabla.append("</td>");
+                salidaTabla.append("<td>");
+                salidaTabla.append("<a href='listaEstudiante.jsp?cod=").append(resultado.getInt(1)).append("' onclick='return confirmarEliminacion();'>Eliminar</a>");
+                salidaTabla.append("</td>");
+                salidaTabla.append("</tr>");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error de conexion");
+        }
+        return salidaTabla.toString();
+    }
+    
+    
+    
+    
+    
+    public String listarEstudianteSelect(){
+        StringBuilder salidaTabla=new StringBuilder();
+        StringBuilder query=new StringBuilder();
+        query.append(" select e.idestudiante,e.nombre,e.apellido ");
+        query.append(" from estudiante e ");
+        try {
+            PreparedStatement pst=connection.prepareStatement(query.toString());
+            ResultSet resultado=pst.executeQuery();
+            while(resultado.next()){
+                salidaTabla.append("<option value='");
+                salidaTabla.append(resultado.getInt(1));
+                salidaTabla.append("'>");
+                salidaTabla.append(resultado.getString(2)+" "+resultado.getString(3));
+                salidaTabla.append("</option>");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return salidaTabla.toString();
+    }
+    
+    
     public String modificarEstudiante(HttpServletRequest request,String codEstudiante){
         String salida="";
         int idgrado=0;
