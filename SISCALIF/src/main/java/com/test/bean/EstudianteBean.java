@@ -6,6 +6,7 @@
 package com.test.bean;
 
 import com.test.clases.Estudiante;
+import com.test.clases.EstudianteGrado;
 import com.test.conexion.VariablesConexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +30,9 @@ public class EstudianteBean {
     private PreparedStatement updateEstudiante;
     //Objeto para eliminar un registro
     private PreparedStatement deleteEstudiante;
+    
+    //objeto para mostrar grado
+    private EstudianteGrado estudianteGradoModificar;
     
     //constructores
     public EstudianteBean()throws SQLException {
@@ -68,8 +72,8 @@ public class EstudianteBean {
                 String nombre=request.getParameter("nomEst");
                 String apellido=request.getParameter("apEst");
                 int cedula=Integer.parseInt(request.getParameter("cedEst"));
-                String codEstd=request.getParameter("codEst");
-                
+                //codigo estudiante
+                String codEstd=apellido.substring(0,1)+nombre.substring(0,1)+"-"+cedula;
                 //pasando los datos a los parametros de la consulta
                 insertEstudiante.setInt(1, codGrado);
                 insertEstudiante.setInt(2, codCurso);
@@ -98,8 +102,9 @@ public class EstudianteBean {
     public String listarEstudiante(){
         StringBuilder salidaTabla=new StringBuilder();
         StringBuilder query=new StringBuilder();
-        query.append(" select e.idestudiante,e.cod_est,e.nombre,e.apellido,e.ci,c.nombre_curso from cursos c ");
+        query.append(" select e.idestudiante,e.cod_est,e.nombre,e.apellido,e.ci,c.nombre_curso,g.grado from cursos c ");
         query.append(" INNER JOIN estudiante e ON c.idcurso=e.idcurso ");
+        query.append(" INNER JOIN grado g ON e.idgrado=g.idgrado ");
         try {
             PreparedStatement pst=connection.prepareStatement(query.toString());
             ResultSet resultado=pst.executeQuery();
@@ -120,9 +125,13 @@ public class EstudianteBean {
                 salidaTabla.append("<td>");
                 salidaTabla.append(resultado.getString(6));
                 salidaTabla.append("</td>");
+                salidaTabla.append("<td>");
+                salidaTabla.append(resultado.getString(7));
+                salidaTabla.append("</td>");
                 //adicionando enlace para modificar ese registro
                 salidaTabla.append("<td>");
-                salidaTabla.append("<a href=modificarEstudiante.jsp?cod=").append(resultado.getInt(1)).append(">Modificar</a>");
+                salidaTabla.append("<a href=modificarEstudiante.jsp?cod=")
+                        .append(resultado.getInt(1)).append(">Modificar</a>");
                 salidaTabla.append("</td>");
                 salidaTabla.append("<td>");
                 salidaTabla.append("<a href='listaEstudiante.jsp?cod=").append(resultado.getInt(1)).append("' onclick='return confirmarEliminacion();'>Eliminar</a>");
@@ -136,31 +145,32 @@ public class EstudianteBean {
         return salidaTabla.toString();
     }
     
-    
-    //metodo que permite buscar un estudiante por su codigo o llave primaria
+    //metodo que permite buscar una categoria por su codigo o llave primaria
     public void buscarEstudiante(String codEstudiante){
         estudianteModificar=new Estudiante();
+        estudianteGradoModificar=new EstudianteGrado();
         StringBuilder query=new StringBuilder();
-        query.append("select e.idestudiante, e.idgrado,e.idcurso,e.nombre,e.apellido,e. ci,e.cod_est,c.nombre_curso,g.grado " );
-        query.append(" from estudiante e inner join cursos c on e.idcurso=c.idcurso");
-        query.append("  inner join grado g on g.idgrado=e.idgrado");
-        query.append(" where e.idestudiante=? ");
+        query.append("select e.idestudiante,e.nombre,e.apellido,e.ci,e.cod_est,e.idgrado,e.idcurso,g.grado,c.nombre_curso " );
+        query.append(" from estudiante e ");
+        query.append(" inner join grado g on e.idgrado=g.idgrado ");
+        query.append(" inner join cursos c on e.idcurso=c.idcurso ");
+        query.append(" where idestudiante=? ");
         try {
             PreparedStatement pst=connection.prepareStatement(query.toString());
             pst.setInt(1, Integer.parseInt(codEstudiante));
             ResultSet resultado=pst.executeQuery();
             //utilizamos una condicion porque la busqueda nos devuelve 1 registro
             if(resultado.next()){
-                //cargando la informacion a nuestro objeto estudianteModificar de tipo estudiante
-                estudianteModificar.setIdEstudiante(resultado.getInt(1));
-                estudianteModificar.setIdGrado(resultado.getInt(2));
-                estudianteModificar.setIdCurso(resultado.getInt(3));
-                estudianteModificar.setNomEstudiante(resultado.getString(4));
-                estudianteModificar.setApEstudiante(resultado.getString(5));
-                estudianteModificar.setCiEstudiante(resultado.getInt(6));
-                estudianteModificar.setCodEstudiante(resultado.getString(7));
-                estudianteModificar.setNomCurso(resultado.getString(8));
-                estudianteModificar.setNomGrado(resultado.getString(9));
+                //cargando la informacion a nuestro objeto categoriaModificarde tipo categoria
+                estudianteModificar.setCodEstudiante(resultado.getInt(1));
+                estudianteModificar.setNomEstudiante(resultado.getString(2));
+                estudianteModificar.setApEstudiante(resultado.getString(3));
+                estudianteModificar.setCiEstudiante(resultado.getInt(4));
+                estudianteModificar.setCodigoEstudiante(resultado.getString(5));
+                estudianteModificar.setIdgradoEstudiante(resultado.getInt(6));
+                estudianteModificar.setIdCursoEstudiante(resultado.getInt(7));
+                estudianteGradoModificar.setNomGrado(resultado.getString(8));
+                estudianteGradoModificar.setNomCurso(resultado.getString(9));
             }
         } catch (SQLException e) {
             System.out.println("Error de conexion");
@@ -168,42 +178,56 @@ public class EstudianteBean {
         }
     }
     
-    public String modificarEstudiante(HttpServletRequest request,String cdEstudiante){
+    public String modificarEstudiante(HttpServletRequest request,String codEstudiante){
         String salida="";
+        int idgrado=0;
+        int idcurso=0;
         if(request==null){
             return "";
         }
         if(connection!=null){
             try {
                 StringBuilder query=new StringBuilder();
-                query.append("update estudiante  ");
-                query.append(" idgrado=?,idcurso=?,nombre=?,apellido=?,ci=?,cod_est=? ");
+                query.append(" update estudiante ");
+                query.append(" set nombre=?,apellido=?,ci=?,cod_est=?,idgrado=?,idcurso=?");
                 query.append(" where idestudiante=? ");
                 if(updateEstudiante==null){
                     updateEstudiante=connection.prepareStatement(query.toString());
                 }
-                //rescatando los datos que fueron modificados por el usuario
+                //restando los datos que fueron modificados por el usuario
+                String nombre=request.getParameter("nom_est");
+                String apellido=request.getParameter("ap_est");
+                int cedula=Integer.parseInt(request.getParameter("ci_est"));
+                //codigo estudiante
+                String codigo=apellido.substring(0,1)+nombre.substring(0,1)+"-"+cedula;
                 
-                int cdgrado=Integer.parseInt(request.getParameter("codG"));
-                int cdcurso=Integer.parseInt(request.getParameter("codC"));
-                String nombre=request.getParameter("nomEst");
-                String apellido=request.getParameter("apEst");
-                int ci=Integer.parseInt(request.getParameter("ciEst"));
-                String codEstd=request.getParameter("coEst");
-                //actualizando los atributos en el objeto categoriamodificar
-                estudianteModificar.setIdGrado(cdgrado);
-                estudianteModificar.setIdCurso(cdcurso);
+                if(request.getParameter("codG").equalsIgnoreCase("")){
+                    idgrado=Integer.parseInt(request.getParameter("cod_gra"));
+                }
+                else{
+                    idgrado=Integer.parseInt(request.getParameter("codG"));
+                }
+                if(request.getParameter("codC").equalsIgnoreCase("")){
+                    idcurso=Integer.parseInt(request.getParameter("cod_cur"));
+                }
+                else{
+                    idcurso=Integer.parseInt(request.getParameter("codC"));
+                }
+                //actualizando los atributos en el objeto estudiantemodificar
                 estudianteModificar.setNomEstudiante(nombre);
-                estudianteModificar.setApEstudiante(apellido);
-                estudianteModificar.setCiEstudiante(ci);
+                estudianteModificar.setNomEstudiante(apellido);
+                estudianteModificar.setCiEstudiante(cedula);
+                estudianteModificar.setCodigoEstudiante(codigo);
+                estudianteModificar.setIdgradoEstudiante(idgrado);
+                estudianteModificar.setIdgradoEstudiante(idcurso);
                 //pasando los parametro a la consulta
-                updateEstudiante.setInt(1, cdgrado);
-                updateEstudiante.setInt(2,cdcurso);
-                updateEstudiante.setString(3, nombre);
-                updateEstudiante.setString(4, apellido);
-                updateEstudiante.setInt(5, ci);
-                updateEstudiante.setString(1, codEstd);
-                updateEstudiante.setInt(2, Integer.parseInt(cdEstudiante==null?"0": cdEstudiante));
+                updateEstudiante.setString(1, nombre);
+                updateEstudiante.setString(2, apellido);
+                updateEstudiante.setInt(3, cedula);
+                updateEstudiante.setString(4, codigo);
+                updateEstudiante.setInt(5, idgrado);
+                updateEstudiante.setInt(6, idcurso);
+                updateEstudiante.setInt(7, Integer.parseInt(codEstudiante==null?"0": codEstudiante));
                 int registros=updateEstudiante.executeUpdate();
                 if(registros==1){
                     salida="Modificacion correcta";
@@ -212,6 +236,7 @@ public class EstudianteBean {
                     salida="Error al ejecutar el update";
                 }
             } catch (SQLException e) {
+                salida="Error al ejecutar el update SQL";
                 System.out.println("Error al ejecutar el update");
                 e.printStackTrace();
             }
@@ -220,19 +245,19 @@ public class EstudianteBean {
     }
     
     //metodo que permite un registro de la tabla categoria
-    public String eliminarCategoria(HttpServletRequest request,String codCategoria){
+    public String eliminarEstudiante(HttpServletRequest request,String codEstudiante){
         String salida="";
         if(request==null){
             return "";
         }
-        if(connection!=null && codCategoria!=null && codCategoria.length()>0){
+        if(connection!=null && codEstudiante!=null && codEstudiante.length()>0){
             try {
                 StringBuilder query=new StringBuilder();
-                query.append("delete from categoria ");
-                query.append(" where cod_cat=? ");
+                query.append("delete from estudiante ");
+                query.append(" where idestudiante=? ");
                 deleteEstudiante=connection.prepareStatement(query.toString());
                 //pasando el parametro
-                deleteEstudiante.setInt(1, Integer.parseInt(codCategoria));
+                deleteEstudiante.setInt(1, Integer.parseInt(codEstudiante));
                 //ejecutando la consulta
                 int nroRegistros=deleteEstudiante.executeUpdate();
                 if(nroRegistros==1){
@@ -242,14 +267,14 @@ public class EstudianteBean {
                     salida="Existo un error al tratar de eliminar el registro";
                 }
             } catch (SQLException e) {
+                salida="Existo un error SQL";
                 System.out.println("Error en el proceso ");
                 e.printStackTrace();
             }
         }
         return salida;
     }
-    
-    
+   
     //getter y setter
 
     public Estudiante getEstudianteModificar() {
@@ -259,6 +284,15 @@ public class EstudianteBean {
     public void setEstudianteModificar(Estudiante estudianteModificar) {
         this.estudianteModificar = estudianteModificar;
     }
+
+    public EstudianteGrado getEstudianteGradoModificar() {
+        return estudianteGradoModificar;
+    }
+
+    public void setEstudianteGradoModificar(EstudianteGrado estudianteGradoModificar) {
+        this.estudianteGradoModificar = estudianteGradoModificar;
+    }
+    
     
     
 }

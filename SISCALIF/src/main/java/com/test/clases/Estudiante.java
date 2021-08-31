@@ -8,49 +8,30 @@ package com.test.clases;
 import java.io.Serializable;
 
 /**
- *
+ *POJO de la tabla categoria para modificar los campos de un determinado registro
  * @author FERMIN
  */
-
 public class Estudiante implements Serializable {
     //atributos
-    private int idEstudiante;
-    private int idGrado;
-    private int idCurso;
+    private int codEstudiante;
     private String nomEstudiante;
     private String apEstudiante;
     private int ciEstudiante;
-    private String codEstudiante;
-    private String nomCurso;
-    private String nomGrado;
+    private String codigoEstudiante;
+    private int idgradoEstudiante;
+    private int idCursoEstudiante;
     //constructor
      public Estudiante() {
     }
 
     //getter y setter
 
-    public int getIdEstudiante() {
-        return idEstudiante;
+    public int getCodEstudiante() {
+        return codEstudiante;
     }
 
-    public void setIdEstudiante(int idEstudiante) {
-        this.idEstudiante = idEstudiante;
-    }
-
-    public int getIdGrado() {
-        return idGrado;
-    }
-
-    public void setIdGrado(int idGrado) {
-        this.idGrado = idGrado;
-    }
-
-    public int getIdCurso() {
-        return idCurso;
-    }
-
-    public void setIdCurso(int idCurso) {
-        this.idCurso = idCurso;
+    public void setCodEstudiante(int codEstudiante) {
+        this.codEstudiante = codEstudiante;
     }
 
     public String getNomEstudiante() {
@@ -77,32 +58,38 @@ public class Estudiante implements Serializable {
         this.ciEstudiante = ciEstudiante;
     }
 
-    public String getCodEstudiante() {
-        return codEstudiante;
+    public String getCodigoEstudiante() {
+        return codigoEstudiante;
     }
 
-    public void setCodEstudiante(String codEstudiante) {
-        this.codEstudiante = codEstudiante;
+    public void setCodigoEstudiante(String codigoEstudiante) {
+        this.codigoEstudiante = codigoEstudiante;
     }
 
-    public String getNomCurso() {
-        return nomCurso;
+    public int getIdgradoEstudiante() {
+        return idgradoEstudiante;
     }
 
-    public void setNomCurso(String nomCurso) {
-        this.nomCurso = nomCurso;
+    public void setIdgradoEstudiante(int idgradoEstudiante) {
+        this.idgradoEstudiante = idgradoEstudiante;
     }
 
-    public String getNomGrado() {
-        return nomGrado;
+    public int getIdCursoEstudiante() {
+        return idCursoEstudiante;
     }
 
-    public void setNomGrado(String nomGrado) {
-        this.nomGrado = nomGrado;
+    public void setIdCursoEstudiante(int idCursoEstudiante) {
+        this.idCursoEstudiante = idCursoEstudiante;
     }
 
     
+
+    
+
    
+
+    
+
     
      
 }

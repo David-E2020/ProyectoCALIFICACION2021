@@ -30,10 +30,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>COD. ESTUDIANTE: </td>
-                        <td><input type="text" name="codEst"/></td>
-                    </tr>
+                    
                     <tr>
                         <td>NOMBRE: </td>
                         <td><input type="text" name="nomEst"/></td>
