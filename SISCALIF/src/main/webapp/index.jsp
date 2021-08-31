@@ -20,5 +20,9 @@
         <a href="registrarEstudiante.jsp">REGISTRAR ESTUDIANTES</a>
         <br>
         <a href="listaEstudiante.jsp">LISTA DE ESTUDIANTES</a>
+        <br>
+        <a href="listaNotas.jsp">LISTA DE NOTAS</a>
+        <br>
+        <a href="registrarNota.jsp">REGISTRAR NOTAS</a>
     </body>
 </html>

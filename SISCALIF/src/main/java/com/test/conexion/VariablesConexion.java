@@ -17,7 +17,7 @@ public class VariablesConexion {
     public static String URL_BBDD="jdbc:postgresql://localhost:5432/CALIFICACION";
     public static String DRIVER_BBDD="org.postgresql.Driver";
     public static String USUARIO_BBDD="postgres";
-    public static String PASSWORD_BBDD="firmo2021";
+    public static String PASSWORD_BBDD="aeYpfV607+$$";
     
     //objeto para realizar la conexion
     private Connection connection;

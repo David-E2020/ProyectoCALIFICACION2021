@@ -6,3 +6,4 @@ com\test\clases\Grado.class
 com\test\conexion\VariablesConexion.class
 com\test\clases\Estudiante.class
 com\test\clases\EstudianteGrado.class
+com\test\bean\NotasBean.class
