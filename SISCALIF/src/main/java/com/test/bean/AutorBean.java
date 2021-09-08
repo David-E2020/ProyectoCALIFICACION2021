@@ -28,7 +28,7 @@ public class AutorBean {
     //objeto para poder modificar el registro
     private PreparedStatement updateCursos;
     //Objeto para eliminar un registro
-    private PreparedStatement deleteCursos;
+    private PreparedStatement deleteAutor;
     
     //constructores
     public AutorBean()throws SQLException {
@@ -52,14 +52,15 @@ public class AutorBean {
     public String listarAutor(){
         StringBuilder salidaTabla=new StringBuilder();
         StringBuilder query=new StringBuilder();
-        query.append(" select e.idestudiante,e.cod_est,e.nombre,e.apellido,e.ci,c.nombre_curso,g.grado from cursos c ");
-        query.append(" INNER JOIN estudiante e ON c.idcurso=e.idcurso ");
-        query.append(" INNER JOIN grado g ON e.idgrado=g.idgrado ");
+        query.append(" select * from autor ");
         try {
             PreparedStatement pst=connection.prepareStatement(query.toString());
             ResultSet resultado=pst.executeQuery();
             while(resultado.next()){
                 salidaTabla.append("<tr>");
+                salidaTabla.append("<td>");
+                salidaTabla.append(resultado.getInt(1));
+                salidaTabla.append("</td>");
                 salidaTabla.append("<td>");
                 salidaTabla.append(resultado.getString(2));
                 salidaTabla.append("</td>");
@@ -70,21 +71,14 @@ public class AutorBean {
                 salidaTabla.append(resultado.getString(4));
                 salidaTabla.append("</td>");
                 salidaTabla.append("<td>");
-                salidaTabla.append(resultado.getInt(5));
-                salidaTabla.append("</td>");
-                salidaTabla.append("<td>");
-                salidaTabla.append(resultado.getString(6));
-                salidaTabla.append("</td>");
-                salidaTabla.append("<td>");
-                salidaTabla.append(resultado.getString(7));
+                salidaTabla.append(resultado.getString(5));
                 salidaTabla.append("</td>");
                 //adicionando enlace para modificar ese registro
                 salidaTabla.append("<td>");
-                salidaTabla.append("<a href=modificarEstudiante.jsp?cod=")
-                        .append(resultado.getInt(1)).append(">Modificar</a>");
+                salidaTabla.append("<a href=modificarCursos.jsp?cod=").append(resultado.getInt(1)).append(">Modificar</a>");
                 salidaTabla.append("</td>");
                 salidaTabla.append("<td>");
-                salidaTabla.append("<a href='listaEstudiante.jsp?cod=").append(resultado.getInt(1)).append("' onclick='return confirmarEliminacion();'>Eliminar</a>");
+                salidaTabla.append("<a href='listarAutor.jsp?cod=").append(resultado.getInt(1)).append("' onclick='return confirmarEliminacion();'>Eliminar</a>");
                 salidaTabla.append("</td>");
                 salidaTabla.append("</tr>");
             }
@@ -120,21 +114,21 @@ public class AutorBean {
     
     
     //metodo que permite un registro de la tabla categoria
-    public String eliminarAutor(HttpServletRequest request,String codCursos){
+    public String eliminarAutor(HttpServletRequest request,String codAutor){
         String salida="";
         if(request==null){
             return "";
         }
-        if(connection!=null && codCursos!=null && codCursos.length()>0){
+        if(connection!=null && codAutor!=null && codAutor.length()>0){
             try {
                 StringBuilder query=new StringBuilder();
-                query.append("delete from cursos ");
-                query.append(" where idcurso=? ");
-                deleteCursos=connection.prepareStatement(query.toString());
+                query.append("delete from autor ");
+                query.append(" where cod_autor=? ");
+                deleteAutor=connection.prepareStatement(query.toString());
                 //pasando el parametro
-                deleteCursos.setInt(1, Integer.parseInt(codCursos));
+                deleteAutor.setInt(1, Integer.parseInt(codAutor));
                 //ejecutando la consulta
-                int nroRegistros=deleteCursos.executeUpdate();
+                int nroRegistros=deleteAutor.executeUpdate();
                 if(nroRegistros==1){
                     salida="Registro Eliminado de forma correcta";
                 }
@@ -143,7 +137,7 @@ public class AutorBean {
                 }
             } catch (SQLException e) {
                 System.out.println("Error en el proceso ");
-                salida="En el curso esta registrado un estudiante";
+                salida="El autor tiene registrado un libro";
                 e.printStackTrace();
             }
         }
@@ -166,6 +160,14 @@ public class AutorBean {
 
     public void setInsertAutor(PreparedStatement insertAutor) {
         this.insertAutor = insertAutor;
+    }
+
+    public PreparedStatement getDeleteAutor() {
+        return deleteAutor;
+    }
+
+    public void setDeleteAutor(PreparedStatement deleteAutor) {
+        this.deleteAutor = deleteAutor;
     }
 
     

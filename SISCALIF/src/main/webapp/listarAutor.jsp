@@ -20,12 +20,12 @@
     </head>
     <body>
         <h1>LISTA DE CURSOS</h1>
-        <jsp:useBean id="cursosBean" scope="session" class="com.test.bean.CursosBean"/>
+        <jsp:useBean id="autorBean" scope="session" class="com.test.bean.AutorBean"/>
         <%
             //obtener el dato del parametro cod
-            String codCursos=request.getParameter("cod");
-            if(codCursos!=null){
-                String salida=cursosBean.eliminarCursos(request,codCursos);
+            String codAutor=request.getParameter("cod");
+            if(codAutor!=null){
+                String salida=autorBean.eliminarAutor(request,codAutor);
                 out.print(salida);
             }
         %>
@@ -33,11 +33,15 @@
             <thead>
                 <tr>
                     <th>CODIGO</th>
+                    <th>PATERNO</th>
+                    <th>MATERNO</th>
                     <th>NOMBRE</th>
+                    <th>NACIONALIDAD</th>
+                    <th colspan="2">ACCIONES</th>
                 </tr>
             </thead>
             <tbody>
-                <%=cursosBean.listarCategoria()%>
+                <%=autorBean.listarAutor()%>
             </tbody>
         </table>
             

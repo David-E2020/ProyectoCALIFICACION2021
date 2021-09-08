@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @author FERMIN
  */
 public class VariablesConexion {
-    public static String URL_BBDD="jdbc:postgresql://localhost:5432/CALIFICACION";
+    public static String URL_BBDD="jdbc:postgresql://localhost:5432/BIBLIOTECA2";
     public static String DRIVER_BBDD="org.postgresql.Driver";
     public static String USUARIO_BBDD="postgres";
     public static String PASSWORD_BBDD="aeYpfV607+$$";

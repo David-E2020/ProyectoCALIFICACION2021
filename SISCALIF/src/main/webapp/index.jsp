@@ -27,6 +27,6 @@
         <br>
         <a href="registrarPrestamo.jsp">REGISTRAR PRESTAMO</a>
         <br>
-        <a href="EliminarAutor.jsp">ELIMINAR AUTOR</a>
+        <a href="listarAutor.jsp">LIKSTAR AUTOR</a>
     </body>
 </html>

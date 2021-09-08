@@ -49,10 +49,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>FECHA REGISTRO: </td>
-                        <td><input type="date" name="fechaRegistro"/></td>
-                    </tr>
-                    <tr>
                         <td>FECHA ENTREGA: </td>
                         <td><input type="date" name="fechaEntrega"/></td>
                     </tr>

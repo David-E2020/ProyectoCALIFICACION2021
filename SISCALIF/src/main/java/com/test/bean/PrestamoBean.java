@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,7 +57,7 @@ public class PrestamoBean {
                 //definiendo la consulta
                 StringBuilder query=new StringBuilder();
                 query.append(" insert into prestamo ");
-                query.append(" values (nextval('sec_prestamo'),?,?) ");
+                query.append(" values (nextval('sec_prestamo'),?,?,?,?) ");
                 //enviando la consulta
                 if(insertPrestamo==null){
                     insertPrestamo=connection.prepareStatement(query.toString()); 
@@ -64,9 +65,16 @@ public class PrestamoBean {
                 //rescatando los parametros del formulario
                 int codLibro=Integer.parseInt(request.getParameter("codLibro"));
                 int codUsr=Integer.parseInt(request.getParameter("codUsuario"));
+                //String fechaPrestamo=request.getParameter("fechaPrestamo");
+                
+                
+                String fechaDevolucion=request.getParameter("fechaDevolucion");
+                        
                 //pasando los datos a los parametros de la consulta
                 insertPrestamo.setInt(1, codLibro);
                 insertPrestamo.setInt(2, codUsr);
+                insertPrestamo.setDate(3, new java.sql.Date(new Date().getTime()));
+                insertPrestamo.setDate(4, new java.sql.Date(new Date().getTime()));
                 //ejecutando la consulta
                 int registro=insertPrestamo.executeUpdate();
                 if(registro==1){
