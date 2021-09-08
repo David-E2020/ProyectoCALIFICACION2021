@@ -24,5 +24,9 @@
         <a href="listaNotas.jsp">LISTA DE NOTAS</a>
         <br>
         <a href="registrarNota.jsp">REGISTRAR NOTAS</a>
+        <br>
+        <a href="registrarPrestamo.jsp">REGISTRAR PRESTAMO</a>
+        <br>
+        <a href="EliminarAutor.jsp">ELIMINAR AUTOR</a>
     </body>
 </html>
