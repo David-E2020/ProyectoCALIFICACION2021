@@ -12,12 +12,12 @@
         <title>Registrar Estudiante</title>
     </head>
     <body>
-        <jsp:useBean id="libroBean" scope="session" class="com.test.bean.LibroBean"/>
-        <jsp:useBean id="usuarioBean" scope="session" class="com.test.bean.UsuarioBean"/>
-        <jsp:useBean id="prestamoBean" scope="session" class="com.test.bean.PrestamoBean"/>
+        <jsp:useBean id="estudianteBean" scope="session" class="com.test.bean.EstudianteBean"/>
+        <jsp:useBean id="cursosBean" scope="session" class="com.test.bean.CursosBean"/>
+        <jsp:useBean id="gradoBean" scope="session" class="com.test.bean.GradoBean"/>
         <%
             if(request.getParameter("guardar")!=null){
-                String mensaje=prestamoBean.registrarPrestamo(request);
+                String mensaje=estudianteBean.registrarEstudiante(request);
                 out.print(mensaje);
             }
         %>
@@ -31,27 +31,35 @@
                 </thead>
                 <tbody>
                     
+                    <tr>
+                        <td>NOMBRE: </td>
+                        <td><input type="text" name="nomEst"/></td>
+                    </tr>
+                    <tr>
+                        <td>APELLIDOS: </td>
+                        <td><input type="text" name="apEst"/></td>
+                    </tr>
+                    <tr>
+                        <td>CEDULA DE IDENTIDAD: </td>
+                        <td><input type="text" name="cedEst"/></td>
+                    </tr>
+                    <tr>
+                        <td>GRADO: </td>
+                        <td>
+                            <select name="codG">
+                                <%=gradoBean.listarGradoSelect()%>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MATERIA: </td>
+                        <td>
+                            <select name="codC">
+                                <%=cursosBean.listarCursosSelect()%>
+                            </select>
+                        </td>
+                    </tr>
                     
-                    <tr>
-                        <td>USUARIO: </td>
-                        <td>
-                            <select name="codUsuario">
-                                <%=usuarioBean.listarUsuarioSelect()%>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>LIBRO: </td>
-                        <td>
-                            <select name="codLibro">
-                                <%=libroBean.listarLibroSelect()%>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>FECHA ENTREGA: </td>
-                        <td><input type="date" name="fechaDevolucion"/></td>
-                    </tr>
                     
                     <tr>
                         <td colspan="2" align="center"><input type="submit" value="REGISTRAR" name="guardar"/></td>

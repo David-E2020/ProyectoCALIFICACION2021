@@ -1,0 +1,17 @@
+com\test\bean\GradoBean.class
+com\test\bean\UsuarioBean.class
+com\test\bean\CursosBean.class
+com\test\clases\Libro.class
+com\test\clases\Usuario.class
+com\test\bean\LibroBean.class
+com\test\clases\EstudianteGrado.class
+com\test\clases\Autor.class
+com\test\clases\Prestamo.class
+com\test\bean\EstudianteBean.class
+com\test\clases\Cursos.class
+com\test\clases\Grado.class
+com\test\conexion\VariablesConexion.class
+com\test\bean\PrestamoBean.class
+com\test\clases\Estudiante.class
+com\test\bean\AutorBean.class
+com\test\bean\NotasBean.class
